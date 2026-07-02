@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="RobinHodl ($ROBINHODL) on Robinhood Chain. We take from the jeets and give to the HODLers."
+    />
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link rel="apple-touch-icon" href="logo.png" />
+    <meta name="theme-color" content="#DFFF00" />
+    <title>RobinHodl ($ROBINHODL) — Robinhood Chain</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              forest: "#111111",
+              neon: "#DFFF00",
+              charcoal: "#000000",
+              "charcoal-light": "#0a0a0a",
+              "forest-light": "#1a1a1a",
+            },
+            fontFamily: {
+              mono: ['"Share Tech Mono"', "Courier New", "monospace"],
+              pixel: ['"Press Start 2P"', "monospace"],
+            },
+            boxShadow: {
+              neon: "0 0 12px rgba(223, 255, 0, 0.45)",
+              "neon-lg":
+                "0 0 24px rgba(223, 255, 0, 0.55), 0 0 48px rgba(223, 255, 0, 0.2)",
+              "neon-sm": "0 0 8px rgba(223, 255, 0, 0.35)",
+            },
+            animation: {
+              "pulse-neon": "pulseNeon 2.5s ease-in-out infinite",
+              scanline: "scanline 8s linear infinite",
+              flicker: "flicker 4s infinite",
+            },
+            keyframes: {
+              pulseNeon: {
+                "0%, 100%": { boxShadow: "0 0 12px rgba(223, 255, 0, 0.35)" },
+                "50%": { boxShadow: "0 0 22px rgba(223, 255, 0, 0.65)" },
+              },
+              scanline: {
+                "0%": { transform: "translateY(-100%)" },
+                "100%": { transform: "translateY(100vh)" },
+              },
+              flicker: {
+                "0%, 100%": { opacity: "1" },
+                "92%": { opacity: "1" },
+                "93%": { opacity: "0.85" },
+                "94%": { opacity: "1" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      :root {
+        --forest: #111111;
+        --neon: #dfff00;
+        --charcoal: #000000;
+      }
+
+      body {
+        background-color: var(--charcoal);
+        background-image: radial-gradient(
+            ellipse at 20% 0%,
+            rgba(223, 255, 0, 0.08) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 80% 100%,
+            rgba(223, 255, 0, 0.04) 0%,
+            transparent 50%
+          ),
+          linear-gradient(rgba(223, 255, 0, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(223, 255, 0, 0.025) 1px, transparent 1px);
+        background-size: auto, auto, 32px 32px, 32px 32px;
+      }
+
+      .retro-border {
+        border: 2px solid var(--neon);
+        box-shadow: inset 0 0 0 1px rgba(223, 255, 0, 0.12), 0 0 0 2px #000000,
+          0 0 12px rgba(223, 255, 0, 0.22);
+      }
+
+      .retro-border::before {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border: 1px dashed rgba(223, 255, 0, 0.18);
+        pointer-events: none;
+      }
+
+      .btn-neon {
+        transition: transform 0.2s ease, box-shadow 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .btn-neon:hover {
+        transform: scale(1.04);
+        box-shadow: 0 0 24px rgba(223, 255, 0, 0.55);
+      }
+
+      .btn-neon:active {
+        transform: scale(0.98);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px rgba(223, 255, 0, 0.3);
+      }
+
+      .stat-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .terminal-window {
+        background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+        border: 2px solid var(--neon);
+        box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(223, 255, 0, 0.15);
+      }
+
+      .terminal-header {
+        background: linear-gradient(90deg, #111111 0%, #0a0a0a 100%);
+        border-bottom: 1px solid rgba(223, 255, 0, 0.25);
+      }
+
+      .scroll-container {
+        background: linear-gradient(
+          180deg,
+          #111111 0%,
+          #050505 8%,
+          #111111 92%,
+          #050505 100%
+        );
+        border: 3px double var(--neon);
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6),
+          0 8px 32px rgba(0, 0, 0, 0.5), 0 0 16px rgba(223, 255, 0, 0.08);
+      }
+
+      .scroll-container::before,
+      .scroll-container::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 12px;
+        background: repeating-linear-gradient(
+          90deg,
+          #dfff00 0px,
+          #e5ff66 4px,
+          #dfff00 8px
+        );
+      }
+
+      .scroll-container::before {
+        top: -6px;
+        border-radius: 4px 4px 0 0;
+      }
+      .scroll-container::after {
+        bottom: -6px;
+        border-radius: 0 0 4px 4px;
+      }
+
+      .logo-frame {
+        display: inline-block;
+        overflow: hidden;
+        line-height: 0;
+        transition: transform 0.2s ease, filter 0.2s ease;
+      }
+
+      .logo-frame:hover {
+        transform: scale(1.02);
+        filter: drop-shadow(0 0 18px rgba(223, 255, 0, 0.35));
+      }
+
+      .logo-frame--sm {
+        width: 2.75rem;
+        height: 2.75rem;
+      }
+      @media (min-width: 640px) {
+        .logo-frame--sm {
+          width: 3rem;
+          height: 3rem;
+        }
+      }
+
+      .logo-frame--md {
+        width: 10rem;
+        height: 10rem;
+      }
+      @media (min-width: 640px) {
+        .logo-frame--md {
+          width: 12rem;
+          height: 12rem;
+        }
+      }
+      @media (min-width: 768px) {
+        .logo-frame--md {
+          width: 14rem;
+          height: 14rem;
+        }
+      }
+
+      .logo-frame--lg {
+        width: 14rem;
+        height: 14rem;
+      }
+      @media (min-width: 640px) {
+        .logo-frame--lg {
+          width: 16rem;
+          height: 16rem;
+        }
+      }
+
+      .logo-mark {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .scanline-overlay {
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.08) 2px,
+          rgba(0, 0, 0, 0.08) 4px
+        );
+      }
+
+      .ca-widget.copied {
+        border-color: #dfff00;
+        box-shadow: 0 0 20px rgba(223, 255, 0, 0.5);
+      }
+
+      @media (max-width: 640px) {
+        .hero-title {
+          font-size: 1.1rem;
+          line-height: 1.6;
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="text-gray-200 font-mono antialiased min-h-screen relative overflow-x-hidden"
+  >
+    <div class="scanline-overlay fixed inset-0 z-50 opacity-40"></div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 right-0 z-40 bg-charcoal/90 backdrop-blur-md border-b border-neon/20"
+    >
+      <nav
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4"
+        aria-label="Main navigation"
+      >
+        <a href="#" class="flex items-center gap-3 group shrink-0">
+          <span
+            class="logo-frame logo-frame--sm group-hover:scale-105 transition-transform"
+          >
+            <img
+              src="logo.png"
+              alt="RobinHodl logo"
+              class="logo-mark"
+              width="48"
+              height="48"
+            />
+          </span>
+          <span
+            class="font-pixel text-neon text-[0.55rem] sm:text-xs tracking-wider group-hover:drop-shadow-[0_0_8px_rgba(223,255,0,0.8)] transition-all"
+          >
+            RobinHodl
+          </span>
+        </a>
+
+        <div class="flex items-center gap-2 sm:gap-4">
+          <div class="flex items-center gap-2 sm:gap-3">
+            <a
+              href="https://x.com/RobinHodl_rh"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2 text-neon/80 hover:text-neon hover:shadow-neon-sm rounded transition-all"
+              aria-label="Follow on X (Twitter)"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://t.me/RobinHodl_rh"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2 text-neon/80 hover:text-neon hover:shadow-neon-sm rounded transition-all"
+              aria-label="Join Telegram"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
+                />
+              </svg>
+            </a>
+          </div>
+          <button
+            type="button"
+            class="btn-neon bg-forest border-2 border-neon text-neon font-mono text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5 uppercase tracking-wider hover:bg-forest-light shadow-neon"
+            id="connect-wallet-btn"
+          >
+            Connect Wallet
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="pt-20 sm:pt-24">
+      <!-- Hero -->
+      <section
+        class="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 text-center"
+        aria-labelledby="hero-heading"
+      >
+        <div
+          class="absolute inset-0 overflow-hidden pointer-events-none"
+          aria-hidden="true"
+        >
+          <div
+            class="absolute top-1/4 left-1/4 w-64 h-64 bg-neon/5 rounded-full blur-3xl"
+          ></div>
+          <div
+            class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-forest/40 rounded-full blur-3xl"
+          ></div>
+        </div>
+
+        <div class="relative z-10">
+          <p
+            class="text-neon/60 text-xs sm:text-sm uppercase tracking-[0.3em] mb-4 animate-flicker"
+          >
+            // robinhood_chain · chain_id:4663
+          </p>
+
+          <div
+            class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-5"
+          >
+            <span
+              class="inline-flex items-center gap-2 px-3 py-1 border border-neon/30 bg-forest/40 text-neon/80 text-[0.6rem] sm:text-xs uppercase tracking-widest"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full bg-neon animate-pulse"
+              ></span>
+              Robinhood Chain
+            </span>
+          </div>
+
+          <div class="logo-frame logo-frame--md mx-auto mb-8">
+            <img
+              src="logo.png"
+              alt="RobinHodl logo"
+              class="logo-mark"
+              width="224"
+              height="224"
+            />
+          </div>
+
+          <h1
+            id="hero-heading"
+            class="hero-title font-pixel text-neon text-lg sm:text-2xl md:text-3xl leading-relaxed mb-4 drop-shadow-[0_0_12px_rgba(223,255,0,0.35)]"
+          >
+            ROBINHODL ($ROBINHODL)
+          </h1>
+
+          <p
+            class="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed"
+          >
+            We take from the
+            <span class="text-red-400 line-through decoration-neon/50"
+              >jeets</span
+            >
+            and give to the <span class="text-neon font-bold">HODLers</span>.
+          </p>
+
+          <div
+            class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10"
+          >
+            <a
+              href="https://app.uniswap.org/swap?outputCurrency=0xcomingsoon&chain=robinhood"
+              data-buy-link
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-neon w-full sm:w-auto bg-neon text-black font-pixel text-[0.6rem] sm:text-xs px-8 py-4 uppercase tracking-wider shadow-neon-lg hover:bg-neon/90"
+            >
+              Buy $ROBINHODL
+            </a>
+            <a
+              href="https://dexscreener.com/robinhood/0xcomingsoon"
+              data-chart-link
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-neon w-full sm:w-auto bg-transparent border-2 border-neon text-neon font-pixel text-[0.6rem] sm:text-xs px-8 py-4 uppercase tracking-wider hover:bg-neon/10 shadow-neon"
+            >
+              View Chart
+            </a>
+          </div>
+
+          <!-- Copy CA Widget -->
+          <div class="max-w-xl mx-auto">
+            <button
+              type="button"
+              id="copy-ca-btn"
+              class="ca-widget w-full relative retro-border bg-charcoal-light/80 backdrop-blur px-4 sm:px-6 py-4 text-left group cursor-pointer hover:shadow-neon transition-all duration-300"
+              aria-label="Copy contract address to clipboard"
+            >
+              <span
+                class="block text-neon/60 text-xs uppercase tracking-widest mb-1"
+                >Steal the CA here · Robinhood Chain:</span
+              >
+              <span
+                id="copy-feedback"
+                class="hidden absolute inset-0 flex items-center justify-center bg-charcoal/95 text-neon font-pixel text-[0.55rem] uppercase tracking-wider"
+              >
+                Copied!
+              </span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Stats Dashboard -->
+      <section
+        id="stats"
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16"
+        aria-labelledby="stats-heading"
+      >
+        <div class="flex items-center gap-3 mb-8">
+          <span
+            class="w-2 h-2 bg-neon rounded-full animate-pulse"
+            aria-hidden="true"
+          ></span>
+          <h2
+            id="stats-heading"
+            class="font-pixel text-neon text-[0.65rem] sm:text-xs uppercase tracking-wider"
+          >
+            Live Stats // Dashboard
+          </h2>
+        </div>
+
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
+        >
+          <article
+            class="stat-card relative retro-border bg-forest/30 p-5 sm:p-6"
+          >
+            <p class="text-neon/50 text-xs uppercase tracking-widest mb-2">
+              Market Cap
+            </p>
+            <p
+              class="text-neon text-xl sm:text-2xl font-bold tabular-nums"
+              data-stat="mcap"
+            >
+              —
+            </p>
+            <p class="text-green-400 text-xs mt-2" data-stat="mcap-delta">
+              denominated in ETH
+            </p>
+          </article>
+
+          <article
+            class="stat-card relative retro-border bg-forest/30 p-5 sm:p-6"
+          >
+            <p class="text-neon/50 text-xs uppercase tracking-widest mb-2">
+              Current Price
+            </p>
+            <p
+              class="text-neon text-lg sm:text-xl font-bold tabular-nums"
+              data-stat="price"
+            >
+              —
+            </p>
+            <p class="text-green-400 text-xs mt-2" data-stat="price-delta">
+              Uniswap V3 · 1% fee tier
+            </p>
+          </article>
+
+          <article
+            class="stat-card relative retro-border bg-forest/30 p-5 sm:p-6"
+          >
+            <p class="text-neon/50 text-xs uppercase tracking-widest mb-2">
+              Liquidity
+            </p>
+            <p
+              class="text-neon text-xl sm:text-2xl font-bold"
+              data-stat="liquidity"
+            >
+              Locked Forever
+            </p>
+          </article>
+
+          <article
+            class="stat-card relative retro-border bg-forest/30 p-5 sm:p-6"
+          >
+            <p class="text-neon/50 text-xs uppercase tracking-widest mb-2">
+              Total Gold Stolen
+            </p>
+            <p
+              class="text-neon text-xl sm:text-2xl font-bold tabular-nums"
+              data-stat="volume"
+            >
+              —
+            </p>
+            <p class="text-neon/60 text-xs mt-2">
+              24h Volume · <span data-stat="holders">—</span> holders
+            </p>
+          </article>
+        </div>
+
+        <div class="mt-6 retro-border relative bg-charcoal-light/40 p-5 sm:p-6">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3"
+          >
+            <p id="graduation-label" class="text-neon text-sm tabular-nums">
+              Target: 4.2 ETH net buy
+            </p>
+          </div>
+          <div
+            class="w-full bg-charcoal/60 h-3 rounded overflow-hidden border border-neon/20"
+          >
+            <div
+              id="graduation-fill"
+              class="bg-neon h-full w-0 shadow-neon-sm transition-all duration-700"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manifesto -->
+      <section
+        id="about"
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16"
+        aria-labelledby="manifesto-heading"
+      >
+        <h2
+          id="manifesto-heading"
+          class="font-pixel text-neon text-[0.65rem] sm:text-xs uppercase tracking-wider mb-10 text-center sm:text-left"
+        >
+          The Manifesto
+        </h2>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center"
+        >
+          <!-- Logo showcase -->
+          <div class="flex justify-center md:justify-start">
+            <div class="inline-block text-center">
+              <div class="logo-frame logo-frame--lg">
+                <img
+                  src="logo.png"
+                  alt="RobinHodl — raised fist with feather"
+                  class="logo-mark"
+                  width="256"
+                  height="256"
+                />
+              </div>
+              <p class="text-neon/50 text-xs mt-4 uppercase tracking-widest">
+                RobinHodl.exe
+              </p>
+            </div>
+          </div>
+
+          <!-- Lore bullets -->
+          <ul class="space-y-6">
+            <li class="flex gap-4 items-start group">
+              <span
+                class="text-neon font-pixel text-[0.5rem] mt-1 shrink-0 group-hover:drop-shadow-[0_0_6px_rgba(223,255,0,0.8)]"
+                >&gt;&gt;</span
+              >
+              <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                Deployed on <span class="text-neon">Robinhood Chain</span> via
+                <a
+                  href="https://app.uniswap.org/swap?outputCurrency=0xcomingsoon&chain=robinhood"
+                  class="text-neon underline hover:no-underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Buy Now</a
+                >
+                — tradable on Uniswap V3 from block one. The Sheriffs turned off
+                the buy button; we turned on the
+                <span class="text-neon">HODL button</span>.
+              </p>
+            </li>
+            <li class="flex gap-4 items-start group">
+              <span
+                class="text-neon font-pixel text-[0.5rem] mt-1 shrink-0 group-hover:drop-shadow-[0_0_6px_rgba(223,255,0,0.8)]"
+                >&gt;&gt;</span
+              >
+            </li>
+            <li class="flex gap-4 items-start group">
+              <span
+                class="text-neon font-pixel text-[0.5rem] mt-1 shrink-0 group-hover:drop-shadow-[0_0_6px_rgba(223,255,0,0.8)]"
+                >&gt;&gt;</span
+              >
+              <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                <span class="text-neon">Anti-Jeet mechanics:</span> Graduation
+                at 4.2 ETH net buy on Robinhood Chain. Diamond hands get the
+                loot; paper hands get yeeted into Sherwood Forest.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Tokenomics -->
+      <section
+        id="tokenomics"
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16"
+        aria-labelledby="tokenomics-heading"
+      >
+        <h2
+          id="tokenomics-heading"
+          class="font-pixel text-neon text-[0.65rem] sm:text-xs uppercase tracking-wider mb-10 text-center"
+        >
+          Tokenomics // The Loot Split
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Terminal window -->
+          <div class="terminal-window rounded-sm overflow-hidden">
+            <div class="terminal-header px-4 py-2 flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+            </div>
+            <div class="p-5 sm:p-6 font-mono text-sm space-y-3">
+              <p>
+                <span class="text-neon">"chain":</span>
+                <span class="text-yellow-300">"Robinhood Chain (4663)"</span>,
+              </p>
+              <p>
+                <span class="text-neon">"total_supply":</span>
+                <span class="text-yellow-300">"1,000,000,000 $ROBINHODL"</span>,
+              </p>
+              <p>
+                <span class="text-neon">"liquidity":</span>
+                <span class="text-green-400">"100% single-sided V3 LP"</span>,
+              </p>
+              <p>
+                <span class="text-neon">"lp_status":</span>
+                <span class="text-green-400">"locked forever"</span>
+              </p>
+              <p>
+                <span class="text-neon">"pool_fee":</span>
+                <span class="text-green-400">"1%"</span>
+                <span class="text-neon/50">// Uniswap V3 tier</span>,
+              </p>
+              <p>
+                <span class="text-neon">"token_tax":</span>
+                <span class="text-red-400">"0/0"</span>,
+              </p>
+              <p>
+                <span class="text-neon">"graduation_target":</span>
+                <span class="text-green-400">"4.2 ETH"</span>
+                <span class="text-neon/50">// net buy milestone</span>,
+              </p>
+              <p>
+                <span class="text-neon">"native_gas":</span>
+                <span class="text-yellow-300">"ETH"</span>
+              </p>
+              <p class="text-neon/60 animate-pulse">█</p>
+            </div>
+          </div>
+
+          <!-- Medieval scroll -->
+          <div
+            class="scroll-container relative rounded-lg px-6 sm:px-8 py-10 sm:py-12"
+          >
+            <div class="relative z-10 text-center">
+              <p
+                class="text-neon/70 font-pixel text-[0.5rem] sm:text-[0.55rem] uppercase tracking-[0.2em] mb-6"
+              >
+                ~ Royal Decree ~
+              </p>
+              <p class="text-gray-200 text-lg sm:text-xl mb-6 leading-relaxed">
+                Total Supply
+              </p>
+              <p
+                class="text-neon font-pixel text-sm sm:text-base mb-8 drop-shadow-[0_0_8px_rgba(223,255,0,0.35)]"
+              >
+                1,000,000,000 $ROBINHODL
+              </p>
+
+              <div class="space-y-4 text-left max-w-xs mx-auto">
+                <div
+                  class="flex justify-between items-center border-b border-neon/20 pb-2"
+                >
+                  <span class="text-gray-300 text-sm">Single-Sided V3 LP</span>
+                  <span class="text-neon font-bold">100%</span>
+                </div>
+                <div
+                  class="w-full bg-black/60 h-3 rounded overflow-hidden border border-neon/10"
+                >
+                  <div class="bg-neon h-full w-full shadow-neon-sm"></div>
+                </div>
+
+                <div
+                  class="flex justify-between items-center border-b border-neon/20 pb-2 pt-2"
+                >
+                  <span class="text-gray-300 text-sm">Token Tax</span>
+                  <span class="text-neon font-bold">0%</span>
+                </div>
+                <div
+                  class="w-full bg-black/60 h-3 rounded overflow-hidden border border-neon/10"
+                >
+                  <div class="bg-red-500/40 h-full w-0"></div>
+                </div>
+
+                <div
+                  class="flex justify-between items-center border-b border-neon/20 pb-2 pt-2"
+                >
+                  <span class="text-gray-300 text-sm">Graduation Target</span>
+                  <span class="text-neon font-bold">4.2 ETH</span>
+                </div>
+              </div>
+
+              <p class="text-neon/40 text-xs mt-8 italic">
+                "LP locked on Robinhood Chain. The Sheriff
+                can't touch this gold."
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Buy CTA anchor -->
+      <section
+        id="buy"
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-12 text-center"
+        aria-label="Buy section"
+      >
+        <div class="retro-border relative bg-forest/20 p-8 sm:p-12">
+          <p
+            class="font-pixel text-neon text-[0.6rem] sm:text-xs uppercase tracking-wider mb-2"
+          >
+            Ready to join the Merry HODLers?
+          </p>
+          <p class="text-neon/50 text-xs mb-5">
+            Trade on Robinhood Chain · Connect wallet to chain ID 4663
+          </p>
+          <a
+            href="https://app.uniswap.org/swap?outputCurrency=0xcomingsoon&chain=robinhood"
+            data-buy-link
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-neon inline-block bg-neon text-black font-pixel text-[0.6rem] sm:text-xs px-10 py-4 uppercase tracking-wider shadow-neon-lg hover:bg-neon/90"
+          >
+            Buy $ROBINHODL
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-neon/10 bg-charcoal-light/50 mt-8">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+        <p
+          class="text-gray-500 text-xs sm:text-sm text-center max-w-2xl mx-auto leading-relaxed mb-4"
+        >
+          $ROBINHODL is a meme coin with no intrinsic value. Don't invest money
+          you need for your castle's rent. Not affiliated with Robinhood
+          Markets, Inc.
+        </p>
+
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <p class="text-neon/40 text-xs">
+            &copy; 2026 RobinHodl · Chain ID 4663 · All gold stolen responsibly.
+          </p>
+
+          <div class="flex items-center gap-4">
+            <a
+              href="https://x.com/RobinHodl_rh"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-neon/60 hover:text-neon transition-colors"
+              aria-label="X (Twitter)"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://t.me/RobinHodl_rh"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-neon/60 hover:text-neon transition-colors"
+              aria-label="Telegram"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
