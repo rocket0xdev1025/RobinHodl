@@ -158,7 +158,7 @@
 
     const liqNote = document.querySelector('[data-stat="liquidity-note"]');
     if (liqNote) {
-      liqNote.textContent = `🔒 NOXA Launch Locker · Uniswap V3 1%`;
+      liqNote.textContent = `Uniswap V2`;
     }
 
     const pct = token.priceChange6hPct;
