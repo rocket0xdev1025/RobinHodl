@@ -7,7 +7,7 @@
     chainName: "Robinhood Chain",
     chainSlug: "robinhood",
     nativeSymbol: "ETH",
-    launchpadUrl: "https://app.uniswap.org/swap?outputCurrency=0x1749159a277d8a923826c805a36e2c1b0a43751a&chain=robinhood",
+    launchpadUrl: "https://app.uniswap.org/swap?outputCurrency=0x871f0b5E40f4328bBa5cdF63BA3aA182C5FC6AE8&chain=robinhood",
     explorerUrl: "https://robinhoodchain.blockscout.com",
     noxaApiUrl: "https://awk00kk00gskkw0o8kc488kg.notoriouslywrong.com",
     launchLocker: "0x7F03effbd7ceB22A3f80Dd468f67eF27826acD85",
